@@ -5,7 +5,7 @@ Wants=local-fs.target
 
 [Service]
 Type=simple
-ExecStart="/shared/mgmt_driver_override"
+ExecStart="/shared/mgmt_driver_override.sh"
 StandardOutput=journal
 
 [Install]
