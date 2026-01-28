@@ -6,6 +6,8 @@ This is a workaround for a BIG-IP VE that has Mellanox ConnectX-6 or newer SR-IO
 
 The install script also installs hooks into /config/user_alert.conf to re-run the install script upon reboot & new software installation.  This means that the workaround doesn't need to be reinstalled after upgrades, however you may see an extra reboot after upgrades to redeploy the script.
 
+NOTE: As of BIG-IP v17.5.x this is no longer needed!
+
 ## Installation
 
 To install and/or update the script simply run the following commands:
