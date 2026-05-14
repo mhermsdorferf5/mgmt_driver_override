@@ -6,7 +6,8 @@ This is a workaround for a BIG-IP VE that has Mellanox ConnectX-6 or newer SR-IO
 
 The install script also installs hooks into /config/user_alert.conf to re-run the install script upon reboot & new software installation.  This means that the workaround doesn't need to be reinstalled after upgrades, however you may see an extra reboot after upgrades to redeploy the script.
 
-NOTE: As of BIG-IP v17.5.x this is no longer needed!
+NOTE: As of BIG-IP v17.5.x this is no longer needed!!!
+
 
 ## Installation
 
@@ -24,4 +25,29 @@ If you happen to have internet access you can use:
 curl -o /shared/install_mgmt_driver_override.sh 'https://raw.githubusercontent.com/mhermsdorferf5/mgmt_driver_override/main/install_mgmt_driver_override.sh'
 bash /shared/install_mgmt_driver_override.sh
 reboot
+```
+
+## Uninstall
+
+You should run this prior to rebooting into v17.5.x; but it can be run after booting into v17.5.x as well, just remember to reboot after uninstalling to ensure everything is still working properly.
+
+```bash
+# Cleanup mgmt_driver_override workaround
+# This is no longer needed post v17.5.x
+# Delete all files:
+rm /etc/systemd/system/mgmt_driver_override.service
+rm /shared/mgmt_driver_override.sh 
+rm /shared/mgmt_driver_override_reboot
+rm /shared/install_mgmt_driver_override.sh
+
+# Remove /config/user_alertd.conf references:
+# NOTE: This creates a backup file with .bak extension
+perl -i.bak -ne 'print unless /install_mgmt_driver_override/' /config/user_alert.conf
+
+# Check if nic-order in /etc/ethmap, matches current nic order:
+cp -a /etc/ethmap /etc/ethmap.bak
+f5-swap-eth -w
+diff /etc/ethmap /etc/ethmap.bak
+
+## IF current mapping is wrong, then update /etc/ethmap and reboot.
 ```
